@@ -1,4 +1,4 @@
-package com.company;
+package GameControl;
 
 public class Main {
 
