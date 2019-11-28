@@ -1,5 +1,7 @@
 package Main;
 
+import Enemy.Enemy;
+import GameEntity.Tower.SniperTower;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,20 +21,40 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+
+            primaryStage = new GameStage(450,500);
             Parent root1 = FXMLLoader.load(getClass().getResource("Main.fxml"));
             Group root = new Group();
             root.getChildren().add(root1);
-            //Canvas canvas = new Canvas();
-            //GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-            //graphicsContext.drawImage();
-            MainController mainController = new MainController();
-            //root.getChildren().add(canvas);
-            mainController.createTower(root);
-
             Scene scene = new Scene(root);
-
             primaryStage.setScene(scene);
+            Canvas canvas = new Canvas(500,450);
+            root.getChildren().add(canvas);
+            final GraphicsContext gc = canvas.getGraphicsContext2D();
 
+            GameField field = new GameField();
+            Enemy enemy = new Enemy(0,0);
+            MainController.enemy.add(enemy);
+
+            MainController.createEnemy();
+            MainController.createTower(root);
+
+            final long startNanoTime = System.nanoTime();
+            new AnimationTimer()
+            {
+                public void handle(long currentNanoTime)
+                {
+                    gc.clearRect(0,0,500,450);
+                    double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+
+                    for (int i = 0; i < MainController.towers.size(); i++){
+                        MainController.towers.get(i).shoot(gc);
+                    }
+                    enemy.update();
+                    enemy.draw(gc,enemy);
+
+                }
+            }.start();
             primaryStage.show();
         }
         catch (Exception e) {
