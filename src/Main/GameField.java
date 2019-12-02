@@ -3,6 +3,7 @@ package Main;
 import GameEntity.GameEntity;
 import GameEntity.Spawner;
 import Enemy.Enemy;
+import GameEntity.Tower.Tower;
 
 import java.util.HashSet;
 
@@ -27,7 +28,13 @@ public class GameField {
     public void update() {
         for (GameEntity entity : entities) {
             if(entity instanceof Spawner) ((Spawner) entity).update(this);
-            if(entity instanceof Enemy) ((Enemy) entity).update();
+            if(entity instanceof Enemy) {
+                ((Enemy) entity).update();
+                if(((Enemy) entity).isDestroy()) {
+                    entities.remove(entity);
+                    //System.out.println(true );
+                }
+            }
 
         }
     }

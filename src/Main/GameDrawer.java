@@ -1,6 +1,7 @@
 package Main;
 
 import GameEntity.GameEntity;
+import GameEntity.Tower.Tower;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -21,7 +22,7 @@ public class GameDrawer {
 
     public void draw(){
         for(GameEntity e : field.entities) {
-
+            if(e instanceof Tower) ((Tower) e).shoot(gc);
             e.draw(gc);
         }
     }

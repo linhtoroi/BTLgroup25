@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
  * To change this template use File | Settings | File Templates.
  */
 public class Target extends GameEntity {
+    private long health;
     public Target(double x, double y) {
         coordinate.setX(x);
         coordinate.setY(y);

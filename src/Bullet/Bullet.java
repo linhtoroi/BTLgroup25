@@ -16,8 +16,8 @@ public class Bullet extends GameEntity {
     public  Bullet(){
 
     }
-    public Bullet(double x, double y) {
-        image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile272.png");
+    public Bullet(double x, double y, Image imageBullet) {
+        image = imageBullet;
         coordinate.x = x;
         coordinate.y = y;
         target = null;
