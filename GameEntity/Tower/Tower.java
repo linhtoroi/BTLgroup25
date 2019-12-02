@@ -6,6 +6,8 @@ import GameEntity.GameEntity;
 import Main.MainController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 
 
 import java.util.ArrayList;
@@ -16,34 +18,39 @@ public abstract class Tower extends GameEntity {
     protected double speed;
     protected Bullet bullet;
     protected Enemy target;
+    public ImageView imageView;
+    public Image imageBullet;
+
+    //public Circle circle;
 
     public Tower(double x, double y){
         speed = 2;
-        radius = 500;
+        radius = 200;
 
+        //circle = new Circle();
     }
 
     abstract public void shoot(GraphicsContext gc);
 
     public void findEnemy(Image imageBullet){
-        double min = 500;
+        double min = 500;//MainController.enemy.get(0).coordinate.distance(coordinate);
         target = MainController.enemy.get(0);
         bullet.setTarget(target);
-        if (target.coordinate.distance(coordinate) > radius) {
-            for (int i = 0; i < MainController.enemy.size(); i++) {
+        //if (target.coordinate.distance(coordinate) > radius) {
+            for (int i = 1; i < MainController.enemy.size(); i++) {
                 if (MainController.enemy.get(i).coordinate.distance(coordinate) < min) {
                     min = MainController.enemy.get(i).coordinate.distance(coordinate);
                     target = MainController.enemy.get(i);
                 }
-                if (min <= radius) {
-                    bullet.setTarget(target);
-                }
             }
-        }
-        if (bullet.isDestroyed() == true && (target.coordinate.distance(this.coordinate) < radius)) {
-            bullet = new Bullet(coordinate.x * 25, coordinate.y * 25, imageBullet);
-        }
+            if (min <= radius) {
+                bullet.setTarget(target);
+            }
+        //}
 
+        if (bullet.isDestroyed() == true && (target.coordinate.distance(this.coordinate) < radius)) {
+            bullet = new Bullet(coordinate.x, coordinate.y, imageBullet);
+        }
     }
 
 }

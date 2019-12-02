@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -33,23 +35,37 @@ public class MainController {
         if (kind == 2) {
             SniperTower tower2 = new SniperTower(x, y);
             MainController.towers.add(tower2);
+           /* Circle circle = new Circle();
+            circle.setRadius(200);
+            circle.setFill(Color.BLACK);
+            circle.setOpacity(0.5);
+            System.out.println(x+ "   " + y);
+            circle.setCenterX(x*25+12.5);
+            circle.setCenterY(y*25+12.5);*/
             root.getChildren().addAll(tower2.imageView);
         }
         else if (kind == 1) {
             NomalTower tower1 = new NomalTower(x, y);
             MainController.towers.add(tower1);
-            root.getChildren().addAll(tower1.imageView);
+            root.getChildren().add(tower1.imageView);
         }
         else if (kind == 3){
             MachineGunTower tower3 = new MachineGunTower(x, y);
             MainController.towers.add(tower3);
-            root.getChildren().addAll(tower3.imageView);
+            root.getChildren().add(tower3.imageView);
         }
     }
     public static void hihi(Stage stage){
        // MainController mainController = new MainController();
         //mainController
                 Pause(new ActionEvent(), stage);
+    }
+    public static void DeleteEnemy(){
+        if (enemy.size() != 0)
+            for (int i = 0; i < enemy.size(); i++){
+                if (enemy.get(i).Outmap())
+                   enemy.remove(i);
+            }
     }
 
     @FXML
@@ -66,7 +82,7 @@ public class MainController {
     public static void Pause(ActionEvent ac, Stage stage){
         pause.setOnAction(actionEvent -> {
             StackPane layout = new StackPane();
-            Scene scene = new Scene(layout, 450, 500);
+            Scene scene = new Scene(layout, 900, 1000);
             stage.setScene(scene);
         });
     }

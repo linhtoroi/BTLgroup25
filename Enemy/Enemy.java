@@ -18,7 +18,7 @@ public class Enemy extends GameEntity {
     }
     public void draw(GraphicsContext gc, GameEntity entity){
         gc.setFill(Color.BLACK);
-        gc.fillRect(entity.coordinate.getX(),entity.coordinate.getY(),25,25);
+        gc.fillRect(entity.coordinate.getX(),entity.coordinate.getY(),50,50);
         //gc.drawImage(image,entity.getX(),entity.getY());
     }
     public void update(Road road){
@@ -31,7 +31,11 @@ public class Enemy extends GameEntity {
         coordinate.setY(coordinate.y + 1);
 
     }
-
+    public boolean Outmap(){
+        if (this.coordinate.x > 1000 || this.coordinate.y < 900)
+            return true;
+        return false;
+    }
 
     private void findPath(){
 

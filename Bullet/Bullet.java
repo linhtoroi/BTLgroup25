@@ -40,10 +40,10 @@ public class Bullet extends GameEntity {
             calculate();
             coordinate.x = coordinate.x + deltaX * speed/coordinate.distance(target.coordinate);
             coordinate.y = coordinate.y + deltaY * speed/coordinate.distance(target.coordinate);
-            gc.drawImage(image, coordinate.x, coordinate.y,30,30);
+            gc.drawImage(image, coordinate.x, coordinate.y,50,50);
             if(Collision.isCollide(target, this)) doDestroy();
         }
-        if (coordinate.x < 0 || coordinate.y < 0 || coordinate.x > 500 || coordinate.y > 450)
+        if (coordinate.x < 0 || coordinate.y < 0 || coordinate.x > 1000 || coordinate.y > 900)
             doDestroy();
     }
 
