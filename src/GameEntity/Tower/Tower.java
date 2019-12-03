@@ -32,7 +32,7 @@ public abstract class Tower extends GameEntity {
 
     abstract public void shoot(GraphicsContext gc);
 
-    public void findEnemy(){
+    public void findEnemy(Image imageBullet){
         double min = 500;//MainController.enemy.get(0).coordinate.distance(coordinate);
         target = MainController.enemy.get(0);
         bullet.setTarget(target);

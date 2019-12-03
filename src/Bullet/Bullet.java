@@ -1,4 +1,7 @@
 package Bullet;
+//import entity.Collision;
+//import entity.GameEntity;
+//import entity.enemy.Enemy;
 import Enemy.Enemy;
 import GameEntity.GameEntity;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,6 +10,7 @@ import Collision.Collision;
 
 
 public class Bullet extends GameEntity {
+    private long strength = 10;
     private boolean isDestroy;
     private final double speed = 20;
     private double deltaX, deltaY;
@@ -31,21 +35,17 @@ public class Bullet extends GameEntity {
     }
 
 
-    public void update() {
+    public void update(GraphicsContext gc) {
         if(isDestroy) return;
         if(target!=null) {
             calculate();
             coordinate.x = coordinate.x + deltaX * speed/coordinate.distance(target.coordinate);
             coordinate.y = coordinate.y + deltaY * speed/coordinate.distance(target.coordinate);
-            if (coordinate.x < 0 || coordinate.y < 0 || coordinate.x > 500 || coordinate.y > 450)
-                doDestroy();
+            gc.drawImage(image, coordinate.x, coordinate.y,50,50);
             if(Collision.isCollide(target, this)) doDestroy();
         }
-
-    }
-
-    public void draw(GraphicsContext gc) {
-        gc.drawImage(image, coordinate.x, coordinate.y,50,50);
+        if (coordinate.x < 0 || coordinate.y < 0 || coordinate.x > 1000 || coordinate.y > 900)
+            doDestroy();
     }
 
     private void calculate() {
@@ -55,6 +55,8 @@ public class Bullet extends GameEntity {
 
     public void doDestroy() {
         isDestroy = true;
+        target.damaged(strength);
+        System.out.println(target.getHealth());
     }
 
     public boolean isDestroyed() {

@@ -1,8 +1,9 @@
 package Main;
 
-import Enemy.Enemy;
+import GameEntity.Mountain;
+import GameEntity.Road;
 import GameEntity.Spawner;
-import GameEntity.Tower.NormalTower;
+import GameEntity.Target;
 import GameEntity.Tower.SniperTower;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -28,24 +30,27 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
 
-            primaryStage = new GameStage(450,500);
+            primaryStage = new GameStage(900,1000);
             Parent root1 = FXMLLoader.load(getClass().getResource("Main.fxml"));
             Group root = new Group();
             root.getChildren().add(root1);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            Canvas canvas = new Canvas(500,450);
+            Canvas canvas = new Canvas(1000,900);
             root.getChildren().add(canvas);
-
             final GraphicsContext gc = canvas.getGraphicsContext2D();
+            Mountain mountain = new Mountain();
+            Road road = new Road();
+
+
 
 
             Image sImage = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile203.png"));
             ImageView sniperImage = new ImageView(sImage);
-            sniperImage.setFitWidth(25);
-            sniperImage.setFitHeight(25);
-            sniperImage.setX(522);
-            sniperImage.setY(150);
+            sniperImage.setFitWidth(50);
+            sniperImage.setFitHeight(50);
+            sniperImage.setX(1044);
+            sniperImage.setY(300);
             root.getChildren().add(sniperImage);
             sniperImage.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
@@ -59,10 +64,10 @@ public class Main extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     //System.out.println("20");
-                    MainController.createTower(root, mouseEvent.getX()/25, mouseEvent.getY()/25, 2);
+                    MainController.createTower(root, mouseEvent.getX()/50, mouseEvent.getY()/50, 2);
                     //System.out.println(mouseEvent.getX()+"  "+mouseEvent.getY());
-                    sniperImage.setX(522);
-                    sniperImage.setY(150);
+                    sniperImage.setX(1044);
+                    sniperImage.setY(300);
                 }
             });
 
@@ -70,10 +75,10 @@ public class Main extends Application {
 
             Image nImage = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile249.png"));
             ImageView nomalImage = new ImageView(nImage);
-            nomalImage.setFitWidth(25);
-            nomalImage.setFitHeight(25);
-            nomalImage.setX(522);
-            nomalImage.setY(100);
+            nomalImage.setFitWidth(50);
+            nomalImage.setFitHeight(50);
+            nomalImage.setX(1044);
+            nomalImage.setY(200);
             root.getChildren().add(nomalImage);
             nomalImage.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
@@ -87,10 +92,10 @@ public class Main extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     //System.out.println("20");
-                    MainController.createTower(root, mouseEvent.getX()/25, mouseEvent.getY()/25, 1);
+                    MainController.createTower(root, mouseEvent.getX()/50, mouseEvent.getY()/50, 1);
                     //System.out.println(mouseEvent.getX()+"  "+mouseEvent.getY());
-                    nomalImage.setX(522);
-                    nomalImage.setY(100);
+                    nomalImage.setX(1044);
+                    nomalImage.setY(200);
                 }
             });
 
@@ -98,10 +103,10 @@ public class Main extends Application {
 
             Image mImage = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile226.png"));
             ImageView machineGunImage = new ImageView(mImage);
-            machineGunImage.setFitWidth(25);
-            machineGunImage.setFitHeight(25);
-            machineGunImage.setX(522);
-            machineGunImage.setY(200);
+            machineGunImage.setFitWidth(50);
+            machineGunImage.setFitHeight(50);
+            machineGunImage.setX(1044);
+            machineGunImage.setY(400);
             root.getChildren().add(machineGunImage);
             machineGunImage.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
@@ -115,44 +120,78 @@ public class Main extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     //System.out.println("20");
-                    MainController.createTower(root, mouseEvent.getX()/25, mouseEvent.getY()/25, 3);
-                    //System.out.println(mouseEvent.getX()+"  "+mouseEvent.getY());
-                    machineGunImage.setX(522);
-                    machineGunImage.setY(200);
+                    for (int i = 0; i < mountain.mountain.size(); i++){
+                        if (mountain.mountain.get(i).x == (int)mouseEvent.getX()/50 && mountain.mountain.get(i).y == (int)mouseEvent.getY()/50){
+                            MainController.createTower(root, (int)mouseEvent.getX()/50, (int)mouseEvent.getY()/50, 3);
+                            //System.out.println(mouseEvent.getX()+"  "+mouseEvent.getY());
+                        }
+                    }
+                    machineGunImage.setX(1044);
+                    machineGunImage.setY(400);
+
                 }
             });
 
 
-
-
-            final GameField field = new GameField();
-
-            final GameDrawer drawer = new GameDrawer(gc,field);
-
-            final NormalTower n = new NormalTower(200,230);
-            Spawner spawner = new Spawner(80, 0);
-
-            field.addEntity(spawner);
-            field.addEntity(n);
+            GameField field = new GameField();
+            SniperTower tower1 = new SniperTower(9,3);
+            SniperTower tower2 = new SniperTower(2,10);
+            MainController.towers.add(tower1);
+            MainController.towers.add(tower2);
+            root.getChildren().addAll(tower1.imageView, tower2.imageView);
 
             final long startNanoTime = System.nanoTime();
+
+            Spawner spawner = new Spawner(160,0);
+            spawner.spawn(field);
+            spawner.update(field);
+
             new AnimationTimer()
             {
                 public void handle(long currentNanoTime)
                 {
-                    gc.clearRect(0,0,500,450);
+                    gc.clearRect(0,0,1000,900);
                     double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-
-                    field.update();
-                    drawer.draw();
-
+                    spawner.update(field);
+                    for (int i = 0; i < MainController.towers.size(); i++){
+                        MainController.towers.get(i).shoot(gc);
+                    }
+                    for (int i = 0; i < MainController.enemy.size(); i++){
+                        MainController.enemy.get(i).update();
+                        if (MainController.enemy.get(i).isDestroy())  MainController.enemy.remove(i);
+                        else MainController.enemy.get(i).draw(gc);
+                    }
+                    Target.drawHealthbar(gc);
+                    //MainController.DeleteEnemy();
                 }
             }.start();
             primaryStage.show();
         }
+
+
         catch (Exception e) {
             System.out.println("Ex");
             e.printStackTrace();
         }
     }
 }
+
+
+
+
+/*Image image = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile231.png"));
+            ImageView startImage = new ImageView(image);
+            startImage.setFitWidth(94);
+            startImage.setFitHeight(41);
+            Button startButton = new Button("Pause");
+            root.getChildren().add(startButton);
+            startButton.setLayoutX(1044.0);
+            startButton.setLayoutY(377);
+            Stage finalPrimaryStage = primaryStage;
+            startButton.setOnAction(actionEvent -> {
+                StackPane layout = new StackPane();
+                Scene scene2 = new Scene(layout, 900, 1000);
+                finalPrimaryStage.setScene(scene2);
+            });*/
+//MainController.hihi(primaryStage);
+//MainController.Pause(new ActionEvent(), primaryStage);

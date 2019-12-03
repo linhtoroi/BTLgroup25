@@ -8,7 +8,7 @@ package GameEntity;
  * To change this template use File | Settings | File Templates.
  */
 public class Config {
-    public final static int TILE_SIZE = 25;
+    public final static int TILE_SIZE = 50;
 
 
     // copy ở project mẫu

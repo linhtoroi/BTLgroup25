@@ -17,13 +17,13 @@ public class MachineGunTower extends Tower {
         imageView.setFitWidth(50);
         imageView.setY(y*50);
         imageView.setX(x*50);
-        imageBullet = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile295.png");
+        Image imageBullet = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile295.png");
         bullet = new Bullet(x*50, y*50, imageBullet);
     }
 
     @Override
     public void shoot(GraphicsContext gc) {
-        findEnemy();
+        findEnemy(new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile295.png"));
         if (target!= null){
             //phuong trinh duong thang giua dan va dich
             double deltaX = target.coordinate.x - coordinate.x;
@@ -47,14 +47,8 @@ public class MachineGunTower extends Tower {
             imageView.setRotate(degrees-270);*/
         }
         if (target.coordinate.distance(this.coordinate) < radius)
-        {
-            bullet.update();
-            bullet.draw(gc);
-        }
+            bullet.update(gc);
 
 
     }
-    public void draw(GraphicsContext gc) {
-
-    };
 }

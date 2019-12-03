@@ -24,7 +24,7 @@ public class SniperTower extends Tower {
 
     }
     public void shoot(GraphicsContext gc) {
-        findEnemy();
+        findEnemy(imageBullet);
         if (target!= null){
             /*double deltaX = target.coordinate.x - this.coordinate.x;
             double deltaY = target.coordinate.y - this.coordinate.y;
@@ -47,13 +47,9 @@ public class SniperTower extends Tower {
             }
             imageView.setRotate(angle);
         }
-        if (target.coordinate.distance(this.coordinate) < radius){
-            bullet.update();
-            bullet.draw(gc);
-        }
+        if (target.coordinate.distance(this.coordinate) < radius)
+            bullet.update(gc);
     }
-    public void draw(GraphicsContext gc) {};
-
 }
 
 

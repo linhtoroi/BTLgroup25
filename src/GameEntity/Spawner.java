@@ -1,5 +1,7 @@
 package GameEntity;
 
+import Enemy.Enemy;
+import Main.MainController;
 import javafx.scene.canvas.GraphicsContext;
 import Enemy.NormalEnemy;
 import javafx.scene.paint.Color;
@@ -41,16 +43,12 @@ public class Spawner extends GameEntity {
     }
 
     public void spawn(Main.GameField field){
-
-        //waves++;
-         //for(int i = 0; i < enemy_per_wave; i++) {
-//          double x = new Random((long)coordinate.getX() * 25).nextDouble() + 1;       khong random dc
-//          double y = new Random((long)coordinate.getY() * 25).nextDouble() + 1;
-        int X = (int)coordinate.x/25;
-        double x = (double)X * 25 + Math.random()*25 + 1 ;
+//        int X = (int)coordinate.x/25;
+//        double x = (double)X * 25 + Math.random()*25 + 1 ;
+        double x = coordinate.x;
         double y = coordinate.y;
         field.entities.add(new NormalEnemy(x,y));
-        System.out.println(x );
+        MainController.enemy.add(new NormalEnemy(x,y));
          //}
     }
 
