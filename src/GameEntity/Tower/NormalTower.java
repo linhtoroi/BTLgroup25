@@ -1,6 +1,7 @@
 package GameEntity.Tower;
 
 import Bullet.Bullet;
+import GameEntity.Config;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +19,7 @@ public class NormalTower extends Tower{
         imageView.setY(y*50);
         imageView.setX(x*50);
         imageBullet = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile272.png");
-        bullet = new Bullet(x*50, y*50, imageBullet);
+        bullet = new Bullet(x*50, y*50, imageBullet,Config.NORMAL_BULLET_SPEED, Config.NORMAL_BULLET_STRENGTH);
     }
 
     @Override

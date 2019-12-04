@@ -12,7 +12,7 @@ import Collision.Collision;
 public class Bullet extends GameEntity {
     private long strength = 10;
     private boolean isDestroy;
-    private final double speed = 20;
+    private double speed = 20;
     private double deltaX, deltaY;
     //private double distance;
     private Enemy target;
@@ -20,6 +20,16 @@ public class Bullet extends GameEntity {
     public  Bullet(){
 
     }
+    public Bullet(double x, double y, Image imageBullet, double speed, long strength) {
+        image = imageBullet;
+        coordinate.x = x;
+        coordinate.y = y;
+        target = null;
+        isDestroy = false;
+        this.speed = speed;
+        this.strength = strength;
+    }
+
     public Bullet(double x, double y, Image imageBullet) {
         image = imageBullet;
         coordinate.x = x;
@@ -27,6 +37,7 @@ public class Bullet extends GameEntity {
         target = null;
         isDestroy = false;
     }
+
     public Bullet(double x, double y, Enemy target) {
         coordinate.x = x;
         coordinate.y = y;

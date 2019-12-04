@@ -1,6 +1,7 @@
 package GameEntity.Tower;
 
 import Bullet.Bullet;
+import GameEntity.Config;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +19,7 @@ public class MachineGunTower extends Tower {
         imageView.setY(y*50);
         imageView.setX(x*50);
         Image imageBullet = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile295.png");
-        bullet = new Bullet(x*50, y*50, imageBullet);
+        bullet = new Bullet(x*50, y*50, imageBullet,Config.MACHINE_GUN_BULLET_SPEED, Config.MACHINE_GUN_BULLET_STRENGTH);
     }
 
     @Override
@@ -47,7 +48,9 @@ public class MachineGunTower extends Tower {
             imageView.setRotate(degrees-270);*/
         }
         if (target.coordinate.distance(this.coordinate) < radius)
+        {
             bullet.update(gc);
+        }
 
 
     }

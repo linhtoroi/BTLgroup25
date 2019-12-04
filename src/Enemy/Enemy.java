@@ -57,7 +57,7 @@ public abstract class Enemy extends GameEntity {
         int row = (int) coordinate.y / Config.TILE_SIZE ;
         int[][] a = GameStage.Map;
             if(a[row][col] == 4 && coordinate.x <= 0) {
-                Target.health --;
+                Target.health -= 10;
                 doDestroy();
             }
             if(a[row + 1][col] == 1 ) {

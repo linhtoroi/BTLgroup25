@@ -1,6 +1,7 @@
 package GameEntity.Tower;
 
 import Bullet.Bullet;
+import GameEntity.Config;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,9 +49,36 @@ public class SniperTower extends Tower {
             imageView.setRotate(angle);
         }
         if (target.coordinate.distance(this.coordinate) < radius)
+        {
             bullet.update(gc);
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //if (bullet.isDestroyed() == false)

@@ -1,5 +1,10 @@
 package GameEntity;
 
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Incognito
@@ -65,6 +70,10 @@ public class Config {
     public static final double BOSS_ENEMY_SPEED = 3;
     public static final long BOSS_ENEMY_REWARD = 10;
     //endregion
+
+    // music region
+    public static final Media bgm = new Media(new File("src\\AssetsKit_2\\Music\\DST-TowerDefenseTheme.mp3").toURI().toString());
+    public static final AudioClip bulletSFX = new AudioClip(new File("src\\AssetsKit_2\\Music\\Weapon Blow.wav").toURI().toString());
 
     private Config() {
     }

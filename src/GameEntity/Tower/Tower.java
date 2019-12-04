@@ -12,7 +12,7 @@ import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import GameEntity.Config;
 public abstract class Tower extends GameEntity {
     protected double radius;
     protected double speed;
@@ -50,8 +50,31 @@ public abstract class Tower extends GameEntity {
 
         if (bullet.isDestroyed() == true && (target.coordinate.distance(this.coordinate) < radius)) {
             bullet = new Bullet(coordinate.x, coordinate.y, imageBullet);
+            Config.bulletSFX.play();
+
         }
     }
+
+//    public Enemy findEnemy(Image imageBullet){
+//        double min = 500;//MainController.enemy.get(0).coordinate.distance(coordinate);
+//        target = MainController.enemy.get(0);
+//        for (int i = 1; i < MainController.enemy.size(); i++) {
+//            if (MainController.enemy.get(i).coordinate.distance(coordinate) < min) {
+//                min = MainController.enemy.get(i).coordinate.distance(coordinate);
+//                target = MainController.enemy.get(i);
+//            }
+//        }
+//        if (min <= radius) {
+//            return target;
+//        }
+//        return null;
+//
+//
+//    }
+
+
+
+
 
 }
 

@@ -1,9 +1,6 @@
 package Main;
 
-import GameEntity.Mountain;
-import GameEntity.Road;
-import GameEntity.Spawner;
-import GameEntity.Target;
+import GameEntity.*;
 import GameEntity.Tower.SniperTower;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -151,9 +148,8 @@ public class Main extends Application {
             spawner.update(field);
 
             // for playing background MUSIC
-            String musicFile = "src\\AssetsKit_2\\Music\\DST-TowerDefenseTheme.mp3";
-            Media sound = new Media(new File(musicFile).toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+
+            MediaPlayer mediaPlayer = new MediaPlayer(Config.bgm);
             mediaPlayer.setVolume(0.3);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             mediaPlayer.play();

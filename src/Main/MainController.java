@@ -3,7 +3,7 @@ package Main;
 import Enemy.Enemy;
 import GameEntity.Spawner;
 import GameEntity.Tower.MachineGunTower;
-import GameEntity.Tower.NomalTower;
+import GameEntity.Tower.NormalTower;
 import GameEntity.Tower.SniperTower;
 import GameEntity.Tower.Tower;
 import javafx.event.ActionEvent;
@@ -37,7 +37,7 @@ public class MainController {
             root.getChildren().addAll(tower2.imageView);
         }
         else if (kind == 1) {
-            NomalTower tower1 = new NomalTower(x, y);
+            NormalTower tower1 = new NormalTower(x, y);
             MainController.towers.add(tower1);
             root.getChildren().add(tower1.imageView);
         }
