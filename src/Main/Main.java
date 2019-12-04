@@ -17,7 +17,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 
 public class Main extends Application {
@@ -146,23 +150,34 @@ public class Main extends Application {
             spawner.spawn(field);
             spawner.update(field);
 
+            // for playing background MUSIC
+            String musicFile = "src\\AssetsKit_2\\Music\\DST-TowerDefenseTheme.mp3";
+            Media sound = new Media(new File(musicFile).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.play();
+
             new AnimationTimer()
             {
                 public void handle(long currentNanoTime)
                 {
                     gc.clearRect(0,0,1000,900);
-                    double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-                    spawner.update(field);
-                    for (int i = 0; i < MainController.towers.size(); i++){
-                        MainController.towers.get(i).shoot(gc);
+                    if(Target.health <= 0) mediaPlayer.stop();
+                    else{
+                        // render and update
+                        //double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+                        spawner.update(field);
+                        for (int i = 0; i < MainController.towers.size(); i++){
+                            MainController.towers.get(i).shoot(gc);
+                        }
+                        for (int i = 0; i < MainController.enemy.size(); i++){
+                            MainController.enemy.get(i).update();
+                            if (MainController.enemy.get(i).isDestroy())  MainController.enemy.remove(i);
+                            else MainController.enemy.get(i).draw(gc);
+                        }
+                        Target.drawHealthbar(gc);
                     }
-                    for (int i = 0; i < MainController.enemy.size(); i++){
-                        MainController.enemy.get(i).update();
-                        if (MainController.enemy.get(i).isDestroy())  MainController.enemy.remove(i);
-                        else MainController.enemy.get(i).draw(gc);
-                    }
-                    Target.drawHealthbar(gc);
-                    //MainController.DeleteEnemy();
                 }
             }.start();
             primaryStage.show();

@@ -23,7 +23,7 @@ public class Target extends GameEntity {
     public static void drawHealthbar(GraphicsContext gc) {
         gc.setFill(Color.RED);
         gc.fillText("HEALTH: ",800, 20);
-        gc.fillRect(900,0 ,200*health/100, 20);     // 200 IS BAR LENGTH  50 IS BAR THICKNESS
+        gc.fillRect(800,0 ,200*health/100, 20);     // 200 IS BAR LENGTH  50 IS BAR THICKNESS
     }
 
     public void update() {

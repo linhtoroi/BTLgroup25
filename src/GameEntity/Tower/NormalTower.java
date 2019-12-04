@@ -23,7 +23,7 @@ public class NormalTower extends Tower{
 
     @Override
     public void shoot(GraphicsContext gc) {
-        findEnemy();
+        findEnemy(imageBullet);
         if (target!= null){
             //phuong trinh duong thang giua dan va dich
             double deltaX = target.coordinate.x - coordinate.x;
@@ -48,8 +48,7 @@ public class NormalTower extends Tower{
             imageView.setRotate(degrees);*/
         }
         if (target.coordinate.distance(this.coordinate) < radius) {
-            bullet.update();
-            bullet.draw(gc);
+            bullet.update(gc);
         }
     }
 
