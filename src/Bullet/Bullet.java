@@ -1,6 +1,11 @@
 package Bullet;
+//import entity.Collision;
+//import entity.GameEntity;
+//import entity.enemy.Enemy;
 import Enemy.Enemy;
 import GameEntity.GameEntity;
+import Main.MainController;
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import Collision.Collision;
@@ -16,8 +21,8 @@ public class Bullet extends GameEntity {
     public  Bullet(){
 
     }
-    public Bullet(double x, double y) {
-        image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile272.png");
+    public Bullet(double x, double y, Image imageBullet) {
+        image = imageBullet;
         coordinate.x = x;
         coordinate.y = y;
         target = null;
@@ -31,21 +36,26 @@ public class Bullet extends GameEntity {
     }
 
 
-    public void update() {
+    public void update(GraphicsContext gc, Group root) {
         if(isDestroy) return;
         if(target!=null) {
             calculate();
             coordinate.x = coordinate.x + deltaX * speed/coordinate.distance(target.coordinate);
             coordinate.y = coordinate.y + deltaY * speed/coordinate.distance(target.coordinate);
-            if (coordinate.x < 0 || coordinate.y < 0 || coordinate.x > 500 || coordinate.y > 450)
+            gc.drawImage(image, coordinate.x, coordinate.y,50,50);
+            if(Collision.isCollide(target, this)) {
+                target.setHealth(target.getHealth() - 10);
+                if (target.getHealth() == 0) {
+                    root.getChildren().remove(target.imageView);
+                    MainController.enemy.remove(target);
+                    MainController.money += target.getReward();
+                    System.out.println(MainController.money);
+                }
                 doDestroy();
-            if(Collision.isCollide(target, this)) doDestroy();
+            }
         }
-
-    }
-
-    public void draw(GraphicsContext gc) {
-        gc.drawImage(image, coordinate.x, coordinate.y,50,50);
+        if (coordinate.x < 0 || coordinate.y < 0 || coordinate.x > 1000 || coordinate.y > 900)
+            doDestroy();
     }
 
     private void calculate() {

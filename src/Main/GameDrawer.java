@@ -1,6 +1,6 @@
 package Main;
 
-import GameEntity.GameEntity;
+//import entity.GameEntity;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -19,10 +19,7 @@ public class GameDrawer {
         this.field = field;
     }
 
-    public void draw(){
-        for(GameEntity e : field.entities) {
-
-            e.draw(gc);
-        }
-    }
+//    public void draw(){
+//        for(GameEntity e : field.entities) e.draw(gc,e);
+//    }
 }

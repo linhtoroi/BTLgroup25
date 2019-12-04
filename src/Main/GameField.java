@@ -1,8 +1,6 @@
 package Main;
 
 import GameEntity.GameEntity;
-import GameEntity.Spawner;
-import Enemy.Enemy;
 
 import java.util.HashSet;
 
@@ -22,14 +20,6 @@ public class GameField {
 
     public void removeEntity(GameEntity entity){
         entities.remove(entity);
-    }
-
-    public void update() {
-        for (GameEntity entity : entities) {
-            if(entity instanceof Spawner) ((Spawner) entity).update(this);
-            if(entity instanceof Enemy) ((Enemy) entity).update();
-
-        }
     }
 
 

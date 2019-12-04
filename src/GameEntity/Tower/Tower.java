@@ -4,47 +4,112 @@ import Bullet.Bullet;
 import Enemy.Enemy;
 import GameEntity.GameEntity;
 import Main.MainController;
+import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
-
-import java.awt.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Tower extends GameEntity {
     protected double radius;
     protected double speed;
-    //protected List<Bullet> bullet;
     protected Bullet bullet;
     protected Enemy target;
+    public ImageView imageView = new ImageView();
+    public Image imageBullet;
+    public Circle circle= new Circle();
+    protected int countSpeed = 0;
+    protected int grade;
+    protected long price;
+
+    //public Circle circle;
+
     public Tower(double x, double y){
-        speed = 2;
-        radius = 50;
-        /*bullet = new ArrayList<Bullet>();
-        for (int i = 0; i< 10; i++)
-            bullet.add(new Bullet(x*25, y*25));*/
-        bullet = new Bullet(x*25, y*25);
+        radius = 200;
+        grade = 0;
+        circle = new Circle();
+        coordinate.x = x*50;
+        coordinate.y = y*50;
     }
-    abstract public void shoot(GraphicsContext gc);
-    public void findEnemy(){
-        //double min = 500;
-        /*for(int i = 0; i < MainController.enemy.size(); i++) {
-            if (MainController.enemy.get(i).coordinate.distance(coordinate) < min) {
-                min = MainController.enemy.get(i).coordinate.distance(coordinate);
-                target = MainController.enemy.get(i);
+
+    public void findEnemy(Image imageBullet){
+        double min = 500;//MainController.enemy.get(0).coordinate.distance(coordinate);
+        if (MainController.enemy.size() > 0) {
+            target = MainController.enemy.get(0);
+            bullet.setTarget(target);
+            //if (target.coordinate.distance(coordinate) > radius) {
+            for (int i = 0; i < MainController.enemy.size(); i++) {
+                if (MainController.enemy.get(i).coordinate.distance(coordinate) < min) {
+                    min = MainController.enemy.get(i).coordinate.distance(coordinate);
+                    target = MainController.enemy.get(i);
+                }
             }
             if (min <= radius) {
                 bullet.setTarget(target);
             }
-        }*/
+            //}
 
-        target = MainController.enemy.get(0);
-        bullet.setTarget(target);
-        if (bullet.isDestroyed() == true && coordinate.distance(target.coordinate) < radius) {
-            bullet = new Bullet(coordinate.x * 25, coordinate.y *  25);
+            if (bullet.isDestroyed() == true && (target.coordinate.distance(this.coordinate) < radius)) {
+                bullet = new Bullet(coordinate.x, coordinate.y, imageBullet);
+            }
         }
+    }
+
+    public void shoot(GraphicsContext gc, Group root) {
+            findEnemy(imageBullet);
+        if (target!= null){
+
+            //phuong trinh duong thang giua dan va dich
+            double deltaX = target.coordinate.x - coordinate.x;
+            double deltaY = target.coordinate.y - coordinate.y;
+
+
+            //tinh goc giua duong thang noi quan dich vs thap va ox
+            double X = coordinate.y + (-coordinate.x / deltaX) * deltaY;
+            double Y = coordinate.x + (-coordinate.y / deltaY) * deltaX;
+            double angle = Math.atan(Y / X) / (Math.PI) * 180;
+            if (target.coordinate.y > coordinate.y) {
+                angle += 180;
+            }
+            imageView.setRotate(angle);
+        }
+        if (target.coordinate.distance(this.coordinate) < radius)
+            bullet.update(gc, root);
+    }
+
+    abstract public void upgrade(int grade, Group root);
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+}
+
+
+
+/*int i = 1;
+            if (target.coordinate.x > coordinate.x || target.coordinate.y > coordinate.y) {
+                target = MainController.enemy.get(i);
+                i++;
+                bullet.setTarget(target);
+            }
+         */
+
+//System.out.println(bullet.coordinate.x +" "+ bullet.coordinate.y);
+
+
 
         /*for (int i = 0; i< 10; i++)
             bullet.get(i).setTarget(target);*/
-    }
-
-}
+        /*double deltaX = target.coordinate.x - this.coordinate.x;
+            double deltaY = target.coordinate.y - this.coordinate.y;
+            double tata = deltaX / Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+            double degrees = Math.acos(tata);
+            degrees = Math.toDegrees(degrees);
+            System.out.println(deltaX + "   " + deltaY + "       " + tata + "        " + degrees);
+            imageView.setRotate(degrees-270);*/
