@@ -9,6 +9,7 @@ import GameEntity.Tower.SniperTower;
 import GameEntity.Tower.Tower;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,11 +26,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 
 public class Main extends Application {
@@ -43,89 +46,144 @@ public class Main extends Application {
         try {
 
             primaryStage = new GameStage(900,1000);
+            Stage window = primaryStage;
+
+            GameDrawer gameDrawer = new GameDrawer();
+            Group menu = new Group();
+            ImageView imageViewPlay = gameDrawer.drawMenu(menu);
+            Scene menuScene = new Scene(menu);
+            primaryStage.setScene(menuScene);
+
+
             Parent root1 = FXMLLoader.load(getClass().getResource("Main.fxml"));
             Group root = new Group();
             root.getChildren().add(root1);
             Scene scene = new Scene(root);
-            primaryStage.setScene(scene);
+
             Canvas canvas = new Canvas(1000,900);
             root.getChildren().add(canvas);
             final GraphicsContext gc = canvas.getGraphicsContext2D();
             Mountain mountain = new Mountain();
             Road road = new Road();
             GameField field = new GameField();
+
             Label money = new Label();
-            money.setLayoutX(1029);
-            money.setLayoutY(77);
-            money.setFont(Font.font(null, 20));
-            money.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.EMPTY)));
-            //money.setBorder(new Border(new BorderStroke()));
-            money.setTextFill(Color.WHITE);
-            money.setTextAlignment(TextAlignment.CENTER);
+            gameDrawer.drawLabelButton(root, money, 1029, 77, 20);
             Label lives = new Label();
-            lives.setLayoutX(1032);
-            lives.setLayoutY(167);
-            lives.setTextFill(Color.WHITE);
-            //lives.setPrefSize(90, 20);
-            lives.setFont(Font.font(null, 20));
+            gameDrawer.drawLabelButton(root, lives, 1032, 167, 20);
+            Label level = new Label();
+            gameDrawer.drawLabelButton(root, level, 1032, 465, 50);
+
             //lives.setTextAlignment(TextAlignment.CENTER);
             Label mgPrice = new Label();
-            mgPrice.setLayoutX(1029);
-            mgPrice.setLayoutY(437);
-            mgPrice.setTextFill(Color.WHITE);
-            mgPrice.setFont(Font.font(null, 20));
-            mgPrice.setTextAlignment(TextAlignment.CENTER);
+            gameDrawer.drawLabelButton(root, mgPrice, 1029, 437, 20);
             mgPrice.setText(Config.SNIPER_TOWER_PRICE+"");
             Label sPrice = new Label();
-            sPrice.setLayoutX(1032);
-            sPrice.setLayoutY(347);
-            sPrice.setTextFill(Color.WHITE);
-            sPrice.setFont(Font.font(null, 20));
-            sPrice.setTextAlignment(TextAlignment.CENTER);
+            gameDrawer.drawLabelButton(root, sPrice, 1032, 347, 20);
             sPrice.setText(Config.MACHINE_GUN_TOWER_PRICE+"");
             Label nPrice = new Label();
-            nPrice.setLayoutX(1032);
-            nPrice.setLayoutY(257);
-            nPrice.setTextFill(Color.WHITE);
-            nPrice.setFont(Font.font(null, 20));
-            nPrice.setTextAlignment(TextAlignment.CENTER);
+            gameDrawer.drawLabelButton(root, nPrice, 1032, 257, 20);
             nPrice.setText(Config.NORMAL_TOWER_PRICE+"");
-            root.getChildren().addAll(money, lives, nPrice, sPrice, mgPrice);
+            root.getChildren().addAll(money, lives, nPrice, sPrice, mgPrice, level);
+
+            ImageView start = new ImageView(new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile091.png"));
+            start.setFitHeight(Config.BUTTON_SIZE);
+            start.setFitWidth(Config.BUTTON_SIZE);
+            start.setLayoutX(1000);
+            start.setLayoutY(810);
+            root.getChildren().add(start);
+
+            ImageView pause = new ImageView(new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile090.png"));
+            pause.setFitHeight(Config.BUTTON_SIZE);
+            pause.setFitWidth(Config.BUTTON_SIZE);
+            pause.setLayoutX(1000);
+            pause.setLayoutY(720);
+            root.getChildren().add(pause);
+
 
             MainController.useDragRelaese(root,mountain);
 
 
             final long startNanoTime = System.nanoTime();
-
+            MainController.level();
+            MainController.healthlevel = MainController.healthLevels[0];
             Spawner spawner = new Spawner(3,0);
             //spawner.spawn();
             //spawner.update();
+            MainController.pause(pause, start, primaryStage);
 
-            new AnimationTimer()
+            // for playing background MUSIC
+
+/*            MediaPlayer mediaPlayer = new MediaPlayer(Config.bgm);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.play();*/
+
+            imageViewPlay.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    window.setScene(scene);
+                }
+            });
+
+
+            Group rootWin = new Group();
+            Scene winScene = new Scene(rootWin);
+            ImageView imageViewReplay = gameDrawer.winLose(rootWin,"YOU WIN");
+            Group loseRoot = new Group();
+            Scene loseScence = new Scene(loseRoot);
+            imageViewPlay = gameDrawer.winLose(loseRoot,"YOULOSE");
+            imageViewReplay.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    window.setScene(menuScene);
+                }
+            });
+
+            //primaryStage.setScene(scene);
+            MainController.timer = new AnimationTimer()
             {
                 public void handle(long currentNanoTime)
                 {
+                    if (MainController.lives == 0){
+                        MainController.lose = true;
+                        MainController.timer.stop();
+                        window.setScene(loseScence);
+                    }
+                    if(MainController.level == Config.LEVEL && MainController.lives > 0 && MainController.enemy.size() <= 0){
+                        MainController.lose = true;
+                        MainController.timer.stop();
+                        window.setScene(winScene);
+                    }
                     gc.clearRect(0,0,1000,900);
+                    //if(MainController.lives <= 0) mediaPlayer.stop();
                     double t = (currentNanoTime - startNanoTime) / 1000000000.0;
                     //MainController.up(root);
                     MainController.setRadius(root);
 
-                    spawner.update();
+                    spawner.update(start);
                     if (MainController.towers.size()>0)
                         for (int i = 0; i < MainController.towers.size(); i++){
-                            MainController.towers.get(i).shoot(gc, root);
+                            if (MainController.towers.size()>0)
+                                MainController.towers.get(i).shoot(gc, root);
                         }
-                    for (int i = 0; i < MainController.enemy.size(); i++){
-                        MainController.enemy.get(i).update(root);
-                        MainController.enemy.get(i).draw(root, gc);
-                    }
+                    //if (MainController.enemy.size() > 0)
+                        for (int i = 0; i < MainController.enemy.size(); i++){
+                            MainController.enemy.get(i).update(root);
+                            if (MainController.enemy.size() > 0)
+                                MainController.enemy.get(i).draw(root, gc);
+                        }
+                    level.setText(MainController.level+"");
                     money.setText(MainController.money+"");
                     lives.setText(MainController.lives+"");
                     MainController.setRadius(root);
                     //MainController.DeleteEnemy();
                 }
-            }.start();
+            };//.start();
+            MainController.timer.start();
             primaryStage.show();
+
+
         }
 
 

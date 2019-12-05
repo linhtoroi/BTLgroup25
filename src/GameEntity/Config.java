@@ -1,5 +1,10 @@
 package GameEntity;
 
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Incognito
@@ -14,6 +19,15 @@ public class Config {
     // copy ở project mẫu
 
     //Other config related to other entities in the game.
+
+    //region default
+    public static final long MONEY_DEFAULT = 100;
+    public static final int LIVES_DEFAULT = 20;
+    //endregion
+
+    //region map
+    //public static final int ENTITY_SIZE = 50;
+    //endregion
 
     //region Bullet
     public static final long NORMAL_BULLET_TTL = 30;
@@ -33,15 +47,23 @@ public class Config {
     public static final long NORMAL_TOWER_SPEED = 10;
     public static final double NORMAL_TOWER_RANGE = 200;
     public static final long NORMAL_TOWER_PRICE = 30;
+    public static final int NORMAL_TOWER_KIND = 1;
 
     public static final long MACHINE_GUN_TOWER_SPEED = 20;
     public static final double MACHINE_GUN_TOWER_RANGE = 150;
     public static final long MACHINE_GUN_TOWER_PRICE = 70;
+    public static final int MACHINE_GUN_TOWER_KIND = 3;
 
     public static final long SNIPER_TOWER_SPEED = 15;
     public static final double SNIPER_TOWER_RANGE = 300;
     public static final long SNIPER_TOWER_PRICE = 100;
+    public static final int SNIPER_TOWER_KIND = 2;
 
+    public static final int MAX_OF_UPGRADE = 2;
+    public static final double UPGRADE_RANGE = 25;
+    public static final double UPGRADE_SPEED = 5;
+    public static final double UPGRADE_MONEY = 1.5;
+    public static final double SELL_MONEY = 0.4;
     //endregion
 
     //region Enemy
@@ -70,6 +92,27 @@ public class Config {
     public static final long BOSS_ENEMY_REWARD = 100;
     //endregion
 
+    //region Level
+    public static final int LEVEL = 9;
+    public static final long HEALTH_LEVEL_1 = 1000;
+   /* public static final long HEALTH_LEVEL_2 = 1200;
+    public static final long HEALTH_LEVEL_3 = 1500;
+    public static final long HEALTH_LEVEL_4 = 2000;
+    public static final long HEALTH_LEVEL_5 = 3000;
+    public static final long HEALTH_LEVEL_6 = 5000;
+    public static final long HEALTH_LEVEL_7 = 7000;
+    public static final long HEALTH_LEVEL_8 = 9000;
+    public static final long HEALTH_LEVEL_9 = 10000;
+    public static final long HEALTH_LEVEL_10 = 15000;*/
+    //endregion
+
+    //region Button
+    public static final int BUTTON_SIZE = 90;
+    //endregion
+
+    // music region
+   // public static final Media bgm = new Media(new File("src\\AssetsKit_2\\Music\\DST-TowerDefenseTheme.mp3").toURI().toString());
+  //  public static final AudioClip bulletSFX = new AudioClip(new File("src\\AssetsKit_2\\Music\\Weapon Blow.wav").toURI().toString());
 
     private Config() {
     }

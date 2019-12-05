@@ -15,12 +15,12 @@ public class NormalTower extends Tower{
         speed = Config.NORMAL_TOWER_SPEED;
         image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile249.png");
         imageView = new ImageView(image);
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(50);
-        imageView.setY(y*50);
-        imageView.setX(x*50);
+        imageView.setFitHeight(Config.TILE_SIZE);
+        imageView.setFitWidth(Config.TILE_SIZE);
+        imageView.setY(y*Config.TILE_SIZE);
+        imageView.setX(x*Config.TILE_SIZE);
         imageBullet = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile272.png");
-        bullet = new Bullet(x*50, y*50, imageBullet);
+        bullet = new Bullet(x*Config.TILE_SIZE, y*Config.TILE_SIZE, imageBullet);
         price = Config.NORMAL_TOWER_PRICE;
     }
 
@@ -37,15 +37,15 @@ public class NormalTower extends Tower{
 
     @Override
     public void upgrade(int newGrade, Group root){
-        speed += 5;
-        radius += 50;
+        speed += Config.UPGRADE_SPEED*Config.NORMAL_TOWER_KIND;
+        radius += Config.UPGRADE_RANGE*Config.NORMAL_TOWER_KIND;
         System.out.println("day");
         if (newGrade == 1){
             image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile250.png");
             root.getChildren().remove(imageView);
             imageView = new ImageView(image);
-            imageView.setFitHeight(50);
-            imageView.setFitWidth(50);
+            imageView.setFitHeight(Config.TILE_SIZE);
+            imageView.setFitWidth(Config.TILE_SIZE);
             imageView.setY(coordinate.y);
             imageView.setX(coordinate.x);
             root.getChildren().add(imageView);
@@ -56,8 +56,8 @@ public class NormalTower extends Tower{
             image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile229.png");
             root.getChildren().remove(imageView);
             imageView = new ImageView(image);
-            imageView.setFitHeight(50);
-            imageView.setFitWidth(50);
+            imageView.setFitHeight(Config.TILE_SIZE);
+            imageView.setFitWidth(Config.TILE_SIZE);
             imageView.setY(coordinate.y);
             imageView.setX(coordinate.x);
             root.getChildren().add(imageView);

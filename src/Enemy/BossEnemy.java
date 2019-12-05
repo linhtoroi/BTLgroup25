@@ -1,10 +1,12 @@
 package Enemy;
 
 import GameEntity.Config;
+import GameEntity.Point;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,17 +22,15 @@ public class BossEnemy extends Enemy {
         armor = Config.BOSS_ENEMY_ARMOR;
         speed = Config.BOSS_ENEMY_SPEED;
         reward = Config.BOSS_ENEMY_REWARD;
+        image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile248.png");
+        imageView = new ImageView(image);
+        imageView.setFitHeight(100);
+        imageView.setFitWidth(100);
     }
 
     @Override
     public void draw(Group root, GraphicsContext gc) {
-        image = new Image("");
-        imageView = new ImageView(image);
-        imageView = new ImageView(image);
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(50);
-        imageView.setY(coordinate.y);
-        imageView.setX(coordinate.x - 10);
-        root.getChildren().add(imageView);
+        super.draw(root, gc);
+        gc.fillRect(coordinate.getX(),coordinate.getY() - 2,10*health/130, 2);
     }
 }

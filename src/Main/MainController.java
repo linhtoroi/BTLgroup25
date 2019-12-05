@@ -1,12 +1,14 @@
 package Main;
 
 import Enemy.Enemy;
+import GameEntity.Config;
 import GameEntity.Mountain;
 import GameEntity.Spawner;
 import GameEntity.Tower.MachineGunTower;
 import GameEntity.Tower.NormalTower;
 import GameEntity.Tower.SniperTower;
 import GameEntity.Tower.Tower;
+import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -40,59 +42,61 @@ import java.util.ArrayList;
 public class MainController {
     public static ArrayList<Tower> towers = new ArrayList<Tower>();
     public static ArrayList<Enemy> enemy = new ArrayList<>();
-    public static int countOfClick = 0;
-    public static long money = 100;
-    public static int lives = 20;
+    //public static int countOfClick = 0;
+    public static long money = Config.MONEY_DEFAULT;
+    public static int lives = Config.LIVES_DEFAULT;
+    public static int level = 1;
+    public static boolean levelUp = false;
+    public static boolean stop = false;
+    public static long[] healthLevels = new long[Config.LEVEL];
+    public static long healthlevel;
+    public static AnimationTimer timer;
+    public static boolean lose = false;
+    public static boolean win = false;
+
     //@FXML
     //ImageView upgrade;
     //@FXML
     //ImageView cancel;
-
-    public static void createEnemy(GameField field, double x, double y){
-        Spawner spawner = new Spawner(x,y);
+/*
+    public static void createEnemy(GameField field, double x, double y) {
+        Spawner spawner = new Spawner(x, y);
         spawner.spawn();
         spawner.update();
-    }
+    }*/
 
-    public static void createTower(Group root, double x, double y, int kind){
-        if (kind == 2 && money >= 100) {
+    public static void createTower(Group root, double x, double y, int kind) {
+        if (towers.size() > 0)
+            for (int i = 0; i < towers.size(); i++){
+                if (towers.get(i).coordinate.x == x && towers.get(i).coordinate.y == y){
+                    return;
+                }
+            }
+        if (kind == Config.SNIPER_TOWER_KIND && money >= Config.SNIPER_TOWER_PRICE) {
             SniperTower tower2 = new SniperTower(x, y);
             MainController.towers.add(tower2);
             root.getChildren().addAll(tower2.imageView);
-            money -= 100;
-        }
-        else if (kind == 1 && money >= 30) {
+            money -= Config.SNIPER_TOWER_PRICE;
+        } else if (kind == Config.NORMAL_TOWER_KIND && money >= Config.NORMAL_TOWER_PRICE) {
             NormalTower tower1 = new NormalTower(x, y);
             MainController.towers.add(tower1);
             root.getChildren().add(tower1.imageView);
-            money -= 30;
-        }
-        else if (kind == 3 && money >= 200){
+            money -= Config.NORMAL_TOWER_PRICE;
+        } else if (kind == Config.MACHINE_GUN_TOWER_KIND && money >= Config.MACHINE_GUN_TOWER_PRICE) {
             MachineGunTower tower3 = new MachineGunTower(x, y);
             MainController.towers.add(tower3);
             root.getChildren().add(tower3.imageView);
-            money -= 200;
+            money -= Config.MACHINE_GUN_TOWER_PRICE;
         }
     }
-    public static void hihi(Stage stage){
-       // MainController mainController = new MainController();
-        //mainController
-                //Pause(new ActionEvent(), stage);
-    }
-    public static void DeleteEnemy(){
-        if (enemy.size() != 0)
-            for (int i = 0; i < enemy.size(); i++){
-                if (enemy.get(i).Outmap())
-                   enemy.remove(i);
-            }
-    }
-    public static void radiusOfTower(Tower tower, Group root){
+
+    public static void radiusOfTower(Tower tower, Group root) {
         tower.circle.setRadius(tower.getRadius());
         //tower.circle.setFill(Color.BLACK);
         tower.circle.setOpacity(0.3);
         //System.out.println(x+ "   " + y);
-        tower.circle.setCenterX(tower.coordinate.x  + 25);
-        tower.circle.setCenterY(tower.coordinate.y + 25);
+        tower.circle.setCenterX(tower.coordinate.x + Config.TILE_SIZE / 2);
+        tower.circle.setCenterY(tower.coordinate.y + Config.TILE_SIZE / 2);
         VBox group = new VBox();
         tower.imageView.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -114,23 +118,20 @@ public class MainController {
             public void handle(MouseEvent mouseEvent) {
                 //if (mouseEvent.isPrimaryButtonDown())
                 //buttonOfTower(tower,root,group);
-                button(tower,root,group);
+                button(tower, root, group);
 
             }
         });
     }
 
-
-
-
-    public static void button(Tower tower, Group root, VBox group){
+    public static void button(Tower tower, Group root, VBox group) {
 
         ImageView upgrade = new ImageView(new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile043.png"));
         ImageView sell = new ImageView(new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile044.png"));
-        sell.setFitHeight(90);
-        sell.setFitWidth(90);
-        upgrade.setFitHeight(90);
-        upgrade.setFitWidth(90);
+        sell.setFitHeight(Config.BUTTON_SIZE);
+        sell.setFitWidth(Config.BUTTON_SIZE);
+        upgrade.setFitHeight(Config.BUTTON_SIZE);
+        upgrade.setFitWidth(Config.BUTTON_SIZE);
         group.getChildren().addAll(sell, upgrade);
 
         group.setLayoutX(1000);
@@ -146,10 +147,11 @@ public class MainController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 //System.out.println("hihi");
-                if (tower.getGrade() < 2) {
-                    System.out.println("day truoc");
+                if (tower.getGrade() < Config.MAX_OF_UPGRADE && money >= tower.getPrice() * Config.UPGRADE_MONEY) {
+                    //System.out.println("day truoc");
                     tower.upgrade(tower.getGrade() + 1, root);
-
+                    money -= (long) (tower.getPrice() * Config.UPGRADE_MONEY);
+                    tower.setPrice((long) (tower.getPrice() * Config.UPGRADE_MONEY));
                 }
                 //group.getChildren().removeAll(upgrade,sell);
                 root.getChildren().remove(group);
@@ -160,45 +162,27 @@ public class MainController {
             public void handle(MouseEvent mouseEvent) {
                 //System.out.println("hihi");
                 //group.getChildren().removeAll(upgrade,sell);
-                money += 50;
+                money += (long) (tower.getPrice() * Config.SELL_MONEY);
                 root.getChildren().remove(tower.imageView);
                 towers.remove(tower);
                 root.getChildren().remove(group);
             }
         });
-        /*cancel.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                //System.out.println("hihi");
-                //group.getChildren().removeAll(upgrade,sell);
-                root.getChildren().remove(group);
-            }
-        });
-        /*tower.circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if(mouseEvent.isSecondaryButtonDown()) {
-                    System.out.println("hihi");
-                    //group.getChildren().removeAll(upgrade,sell);
-                    root.getChildren().remove(group);
-                }
-            }
-        });*/
-
     }
 
 
-    public static void setRadius(Group root){
-        if (towers.size()>0){
-            for (int i = 0; i < towers.size(); i++){
+    public static void setRadius(Group root) {
+        if (towers.size() > 0) {
+            for (int i = 0; i < towers.size(); i++) {
                 radiusOfTower(towers.get(i), root);
                 //MainController.upgrade(towers.get(i), root);
             }
         }
     }
-    public static void up(Group root){
-        if (towers.size()>0){
-            for (int i = 0; i < towers.size(); i++){
+
+    public static void up(Group root) {
+        if (towers.size() > 0) {
+            for (int i = 0; i < towers.size(); i++) {
                 //MainController.radiusOfTower(MainController.towers.get(i), root);
                 //MainController.upgrade(towers.get(i), root, group);
             }
@@ -206,29 +190,25 @@ public class MainController {
     }
 
 
-
-
-
-
-    public static void useDragRelaese(Group root, Mountain mountain){
+    public static void useDragRelaese(Group root, Mountain mountain) {
         Image nImage = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile249.png"));
         ImageView nomalImage = new ImageView(nImage);
-        dragRelease(root,mountain,nomalImage,1);
+        dragRelease(root, mountain, nomalImage, Config.NORMAL_TOWER_KIND);
         Image sImage = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile203.png"));
         ImageView sniperImage = new ImageView(sImage);
-        dragRelease(root,mountain,sniperImage,2);
+        dragRelease(root, mountain, sniperImage, Config.SNIPER_TOWER_KIND);
         Image mImage = new Image(("/AssetsKit_2/PNG/Retina/towerDefense_tile226.png"));
         ImageView machineGunImage = new ImageView(mImage);
-        dragRelease(root,mountain,machineGunImage,3);
+        dragRelease(root, mountain, machineGunImage, Config.MACHINE_GUN_TOWER_KIND);
     }
 
 
-    public static void dragRelease(Group root, Mountain mountain, ImageView imageView, int kind){
+    public static void dragRelease(Group root, Mountain mountain, ImageView imageView, int kind) {
 
-        imageView.setFitWidth(50);
-        imageView.setFitHeight(50);
+        imageView.setFitWidth(Config.TILE_SIZE);
+        imageView.setFitHeight(Config.TILE_SIZE);
         imageView.setX(1020);
-        imageView.setY(kind*90 + 111);
+        imageView.setY(kind * Config.BUTTON_SIZE + 111);
         root.getChildren().add(imageView);
         imageView.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
@@ -242,34 +222,45 @@ public class MainController {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 //System.out.println("20");
-                for (int i = 0; i < mountain.mountain.size(); i++){
-                    if (mountain.mountain.get(i).x == (int)mouseEvent.getX()/50 && mountain.mountain.get(i).y == (int)mouseEvent.getY()/50){
-                        MainController.createTower(root, (int)mouseEvent.getX()/50, (int)mouseEvent.getY()/50, kind);
+                for (int i = 0; i < mountain.mountain.size(); i++) {
+                    if (mountain.mountain.get(i).x == (int) mouseEvent.getX() / Config.TILE_SIZE && mountain.mountain.get(i).y == (int) mouseEvent.getY() / Config.TILE_SIZE) {
+                        MainController.createTower(root, (int) mouseEvent.getX() / Config.TILE_SIZE, (int) mouseEvent.getY() / Config.TILE_SIZE, kind);
                         //System.out.println(mouseEvent.getX()+"  "+mouseEvent.getY());
                     }
                 }
                 //System.out.println(mouseEvent.getX()+"  "+mouseEvent.getY());
                 imageView.setX(1020);
-                imageView.setY(kind*90 + 111);
+                imageView.setY(kind * Config.BUTTON_SIZE + 111);
+            }
+        });
+    }
+
+    public static void level() {
+        for (int i = 0; i < Config.LEVEL; i++){
+            healthLevels[i] = (long)(Config.HEALTH_LEVEL_1*(i+1.2));
+        }
+    }
+
+    public static void pause(ImageView imageView, ImageView imageView2, Stage stage){
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                MainController.timer.stop();
+                Group rootWin = new Group();
+                Image image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile091.png");
+                ImageView imageView = new ImageView(image);
+                rootWin.getChildren().add(imageView);
+                Scene win = new Scene(rootWin);
+                stage.setScene(win);
             }
         });
     }
 
 
 
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+/*
     @FXML
     Button start;
     @FXML
@@ -287,7 +278,7 @@ public class MainController {
             Scene scene = new Scene(layout, 900, 1000);
             stage.setScene(scene);
         });
-    }*/
+    }
 
     @FXML
     Label moneyText;
@@ -298,9 +289,7 @@ public class MainController {
         moneyText.setText(money+"");
     }
 }
-
-
-
+*/
 
 //Button ban dau viet de nang cap va ban sung
 /* public static void buttonOfTower(Tower tower, Group root, VBox group){
@@ -365,3 +354,13 @@ public class MainController {
             }
         });
     */
+
+//Ham xoa Enemy ban dau
+ /*
+    public static void DeleteEnemy(){
+        if (enemy.size() != 0)
+            for (int i = 0; i < enemy.size(); i++){
+                if (enemy.get(i).Outmap())
+                   enemy.remove(i);
+            }
+    }*/

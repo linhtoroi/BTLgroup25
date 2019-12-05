@@ -36,10 +36,35 @@ public abstract class Enemy extends GameEntity {
     public Enemy(double x, double y){
         coordinate.x = x*50 - 25;
         coordinate.y = y*50;
+        ImageView imageView = new ImageView();
         //System.out.println(coordinate.x+ "    "+coordinate.y);
     }
 
-    abstract public void draw(Group root, GraphicsContext gc);
+    public void draw(Group root, GraphicsContext gc){
+        if(root.getChildren().contains(imageView)) root.getChildren().remove(imageView);
+        imageView.setY(coordinate.y);
+        imageView.setX(coordinate.x);
+        Point u = findPath(root);
+        //ImageView imageView2 = new ImageView();
+        if (u == DELTA_DIRECTION_ARRAY[1]) {
+           root.getChildren().remove(imageView);
+            imageView.setRotate(90);
+        }
+        else if (u == DELTA_DIRECTION_ARRAY[3]) {
+            root.getChildren().remove(imageView);
+            imageView.setRotate(0);
+        }
+        else if (u == DELTA_DIRECTION_ARRAY[2]) {
+            root.getChildren().remove(imageView);
+            imageView.setRotate(0);
+            //imageView.setRotate(90);
+        }
+        //System.out.println(imageView.getRotate());
+
+        root.getChildren().add(imageView);
+        //health bars
+        gc.setFill(Color.RED);
+    }
         //gc.setFill(Color.BLACK);
         //gc.fillRect(coordinate.getX()-10,coordinate.getY(),50,50);
         //gc.drawImage(image,entity.getX(),entity.getY());
@@ -64,11 +89,13 @@ public abstract class Enemy extends GameEntity {
         return false;
     }
 
-    private Point findPath(Group root){
+    protected Point findPath(Group root){
         int col = (int) coordinate.x / Config.TILE_SIZE + 1 ;
         int row = (int) coordinate.y / Config.TILE_SIZE;
         int[][] a = GameStage.Map;
+        System.out.println(a[row][col]);
         if(a[row][col] == 4 && coordinate.x <= 0) {
+            System.out.println("jjkjkhk");
             Target.health --;
             root.getChildren().remove(this.imageView);
             MainController.enemy.remove(this);

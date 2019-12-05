@@ -4,6 +4,7 @@ package Bullet;
 //import entity.enemy.Enemy;
 import Enemy.Enemy;
 import GameEntity.GameEntity;
+import GameEntity.Config;
 import Main.MainController;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
@@ -42,7 +43,7 @@ public class Bullet extends GameEntity {
             calculate();
             coordinate.x = coordinate.x + deltaX * speed/coordinate.distance(target.coordinate);
             coordinate.y = coordinate.y + deltaY * speed/coordinate.distance(target.coordinate);
-            gc.drawImage(image, coordinate.x, coordinate.y,50,50);
+            gc.drawImage(image, coordinate.x, coordinate.y,Config.TILE_SIZE,Config.TILE_SIZE);
             if(Collision.isCollide(target, this)) {
                 target.setHealth(target.getHealth() - 10);
                 if (target.getHealth() == 0) {

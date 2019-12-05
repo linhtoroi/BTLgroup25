@@ -1,6 +1,7 @@
 package Enemy;
 
 import GameEntity.Config;
+import GameEntity.Point;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -21,19 +22,14 @@ public class SmallerEnemy extends Enemy {
         armor = Config.SMALLER_ENEMY_ARMOR;
         speed = Config.SMALLER_ENEMY_SPEED;
         reward = Config.SMALLER_ENEMY_REWARD;
-    }
-    @Override
-    public void draw(Group root, GraphicsContext gc) {
-        if(root.getChildren().contains(imageView)) root.getChildren().remove(imageView);
         image = new Image("/AssetsKit_2/PNG/Retina/towerDefense_tile245.png");
         imageView = new ImageView(image);
         imageView.setFitHeight(100);
         imageView.setFitWidth(100);
-        imageView.setY(coordinate.y);
-        imageView.setX(coordinate.x);
-        root.getChildren().add(imageView);
-        //health bars
-        gc.setFill(Color.RED);
+    }
+    @Override
+    public void draw(Group root, GraphicsContext gc) {
+        super.draw(root, gc);
         gc.fillRect(coordinate.getX(),coordinate.getY() - 2,10*health/10, 2);
     }
 }

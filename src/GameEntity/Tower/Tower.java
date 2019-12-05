@@ -3,6 +3,7 @@ package GameEntity.Tower;
 import Bullet.Bullet;
 import Enemy.Enemy;
 import GameEntity.GameEntity;
+import GameEntity.Config;
 import Main.MainController;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,18 +28,18 @@ public abstract class Tower extends GameEntity {
     //public Circle circle;
 
     public Tower(double x, double y){
-        radius = 200;
         grade = 0;
         circle = new Circle();
-        coordinate.x = x*50;
-        coordinate.y = y*50;
+        coordinate.x = x * Config.TILE_SIZE;
+        coordinate.y = y * Config.TILE_SIZE;
     }
 
     public void findEnemy(Image imageBullet){
-        double min = 500;//MainController.enemy.get(0).coordinate.distance(coordinate);
+        //MainController.enemy.get(0).coordinate.distance(coordinate);
         if (MainController.enemy.size() > 0) {
             target = MainController.enemy.get(0);
             bullet.setTarget(target);
+            double min = MainController.enemy.get(0).coordinate.distance(coordinate);
             //if (target.coordinate.distance(coordinate) > radius) {
             for (int i = 0; i < MainController.enemy.size(); i++) {
                 if (MainController.enemy.get(i).coordinate.distance(coordinate) < min) {
@@ -53,6 +54,7 @@ public abstract class Tower extends GameEntity {
 
             if (bullet.isDestroyed() == true && (target.coordinate.distance(this.coordinate) < radius)) {
                 bullet = new Bullet(coordinate.x, coordinate.y, imageBullet);
+              //  Config.bulletSFX.play();
             }
         }
     }
@@ -75,8 +77,9 @@ public abstract class Tower extends GameEntity {
             }
             imageView.setRotate(angle);
         }
-        if (target.coordinate.distance(this.coordinate) < radius)
-            bullet.update(gc, root);
+        if (target!=null)
+            if (target.coordinate.distance(this.coordinate) < radius)
+                bullet.update(gc, root);
     }
 
     abstract public void upgrade(int grade, Group root);
@@ -87,6 +90,14 @@ public abstract class Tower extends GameEntity {
 
     public int getGrade() {
         return grade;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
     }
 }
 
